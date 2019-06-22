@@ -2,12 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{d36aea2f-75b5-486c-b92a-94a00f628750}</UniqueIdentifier>
+      <UniqueIdentifier>{2a209d40-a933-46b5-8f91-1d62e6ee65e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\gles\libEGL.dll" />
+    <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
 </Project>

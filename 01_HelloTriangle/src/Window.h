@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include "WindowListener.h"
 #include <cassert>
+#include <atlbase.h>
+#include <atlconv.h>
 
 class Window
 {
@@ -18,7 +20,7 @@ public:
 		wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wClass.hInstance = hInst;
 		wClass.lpfnWndProc = (WNDPROC)internalWindProc;
-		wClass.lpszClassName = WIN_CLASS;
+		wClass.lpszClassName = CA2W(WIN_CLASS);
 
 		auto okay = RegisterClass(&wClass);
 		assert(okay);
@@ -37,8 +39,8 @@ public:
 		const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		m_hwnd = CreateWindow(
-			WIN_CLASS,
-			title,
+			CA2W(WIN_CLASS),
+			CA2W(title),
 			dwStyle,
 			(screenWidth - windowWidth) / 2,
 			(screenHeight - windowHeight) / 2,
@@ -70,7 +72,7 @@ public:
 		MSG msg;
 		ZeroMemory(&msg, sizeof(MSG));
 
-		auto last = GetTickCount();
+		auto last = GetTickCount64();
 		const unsigned long frameTime = 1000 / fps;
 
 		ShowWindow(m_hwnd, nCmdShow);
@@ -85,11 +87,11 @@ public:
 			}
 			else
 			{
-				auto current = GetTickCount();
+				auto current = GetTickCount64();
 				auto duration = current - last;
 				if (duration < frameTime)
-					Sleep(frameTime - duration);
-				last = GetTickCount();
+					Sleep(frameTime - (DWORD)duration);
+				last = GetTickCount64();
 				if (!m_listener->tick())
 					break;
 			}

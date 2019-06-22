@@ -11,16 +11,17 @@ class Utils
 {
 public:
 
-	static unsigned int currentTime()
+	static ULONGLONG currentTime()
 	{
-		return GetTickCount();
+		//Warning	C28159	Consider using 'GetTickCount64' instead of 'GetTickCount'.Reason: GetTickCount overflows roughly every 49 days.Code that does not take that into account can loop indefinitely.GetTickCount64 operates on 64 bit valuesand does not have that problem
+		return GetTickCount64();
 	}
 
 	static void showConsole()
 	{
 		AllocConsole();
-		freopen("con", "w", stdout);
-		freopen("con", "w", stderr);
+		auto conOut = freopen("con", "w", stdout);
+		auto contErr = freopen("con", "w", stderr);
 	}
 
 	static GLuint compileShader(const std::string& source, GLenum type)
@@ -29,7 +30,7 @@ public:
 		auto src = source.c_str();
 		glShaderSource(shader, 1, &src, NULL);
 		glCompileShader(shader);
-		
+
 		GLint compiledOkay;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compiledOkay);
 
@@ -51,16 +52,16 @@ public:
 	static GLuint linkProgram(GLuint vs, GLuint fs)
 	{
 		auto program = glCreateProgram();
-		
+
 		glAttachShader(program, vs);
 		glAttachShader(program, fs);
-		
+
 		glLinkProgram(program);
-		
+
 		GLint linkedOkay;
 		glGetProgramiv(program, GL_LINK_STATUS, &linkedOkay);
 		if (linkedOkay) return program;
-		
+
 		GLint infoLen = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLen);
 		if (infoLen > 0)

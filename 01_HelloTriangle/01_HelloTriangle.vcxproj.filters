@@ -27,5 +27,6 @@
     <ClInclude Include="src\WindowListener.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\App.h" />
   </ItemGroup>
 </Project>

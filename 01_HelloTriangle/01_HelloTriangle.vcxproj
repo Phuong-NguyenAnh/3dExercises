@@ -30,6 +30,7 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\App.h" />
     <ClInclude Include="src\Graphic.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\Window.h" />

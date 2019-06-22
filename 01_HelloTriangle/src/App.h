@@ -38,9 +38,9 @@ public:
 		glUseProgram(program);
 
 		static float positions[] = {
-			0.f, 0.5f,
-			-0.5f, -0.5f,
-			0.5f, -0.5f
+			0.f, 1.f,
+			-1.f, -1.f,
+			1.f, -1.f
 		};
 		auto positionLocation = glGetAttribLocation(program, "a_position");
 		assert(positionLocation >= 0);

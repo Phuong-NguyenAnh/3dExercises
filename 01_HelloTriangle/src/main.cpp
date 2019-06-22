@@ -1,3 +1,5 @@
+#pragma warning(disable : 28251)
+
 #include <stdio.h>
 #include <Windows.h>
 #include "Window.h"

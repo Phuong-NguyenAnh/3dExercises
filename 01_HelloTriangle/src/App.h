@@ -43,7 +43,7 @@ public:
 			0.5f, -0.5f
 		};
 		auto positionLocation = glGetAttribLocation(program, "a_position");
-		assert(positionLocation > 0);
+		assert(positionLocation >= 0);
 		glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, positions);
 		glEnableVertexAttribArray(positionLocation);
 

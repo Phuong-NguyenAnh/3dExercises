@@ -15,12 +15,12 @@ private:
 public:
 	Window(HINSTANCE hInst, int width, int height, bool resizable, const char* title) : m_listener(NULL)
 	{
-		auto WIN_CLASS = "WinClass";
+		auto WIN_CLASS = L"WinClass";
 		WNDCLASS wClass = { 0 };
 		wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wClass.hInstance = hInst;
 		wClass.lpfnWndProc = (WNDPROC)internalWindProc;
-		wClass.lpszClassName = CA2W(WIN_CLASS);
+		wClass.lpszClassName = WIN_CLASS;
 
 		auto okay = RegisterClass(&wClass);
 		assert(okay);
@@ -39,7 +39,7 @@ public:
 		const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		m_hwnd = CreateWindow(
-			CA2W(WIN_CLASS),
+			WIN_CLASS,
 			CA2W(title),
 			dwStyle,
 			(screenWidth - windowWidth) / 2,
@@ -65,7 +65,7 @@ public:
 		return m_hwnd;
 	}
 
-	void show(int fps, WindowListener* listener, int nCmdShow)
+	void show(int fps, WindowListener * listener, int nCmdShow)
 	{
 		m_listener = listener;
 
@@ -97,7 +97,7 @@ public:
 			}
 		}
 	}
-	
+
 private:
 	static LRESULT CALLBACK internalWindProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{

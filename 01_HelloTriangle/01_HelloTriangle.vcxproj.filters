@@ -14,4 +14,18 @@
     <CopyFileToFolders Include="..\gles\libEGL.dll" />
     <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Graphic.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowListener.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

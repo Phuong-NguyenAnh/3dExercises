@@ -11,18 +11,20 @@ class App : public WindowListener
 private:
 	Graphic& m_graphic;
 	int m_width, m_height;
-
+	GLuint m_matrixLocation;
+	float m_angle;
 public:
 	App(Graphic& graphic, int width, int height) : m_graphic(graphic), m_width(width), m_height(height)
 	{
 		const std::string vsSource = "\
+			uniform mat4 u_matrix\
 			attribute vec2 a_position;\
 			attribute vec4 a_color;\
 			varying vec4 v_color;\
 			void main()\
 			{\
 				v_color = a_color;\
-				gl_Position = vec4(a_position, 0.0, 1.0);\
+				gl_Position = u_matrix * vec4(a_position, 0.0, 1.0);\
 			}";
 		auto vs = Utils::compileShader(vsSource, GL_VERTEX_SHADER);
 		assert(vs > 0);
@@ -60,6 +62,10 @@ public:
 		assert(colorLocation >= 0);
 		glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, 0, colors);
 		glEnableVertexAttribArray(colorLocation);
+
+		m_matrixLocation = glGetUniformLocation(program, "u_matrix");
+		assert(m_matrixLocation >= 0);
+		m_angle = 0;
 
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 	}

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WindowListener.h"
-#include "Graphic.h"
-#include "Utils.h"
+#include <WindowListener.h>
+#include <Graphic.h>
+#include <Utils.h>
 #include <string>
 #include <cassert>
 

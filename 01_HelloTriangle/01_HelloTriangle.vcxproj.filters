@@ -4,6 +4,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2a209d40-a933-46b5-8f91-1d62e6ee65e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{182bab57-7556-4b74-a3f9-0edd8c9f59f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -15,18 +18,20 @@
     <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Graphic.h">
+    <ClInclude Include="..\common\Graphic.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Window.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\WindowListener.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\App.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Window.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WindowListener.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\App.h" />
   </ItemGroup>
 </Project>

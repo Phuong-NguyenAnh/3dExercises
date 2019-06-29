@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <Windows.h>
-#include "Window.h"
-#include "Graphic.h"
-#include "Utils.h"
+#include <Window.h>
+#include <Graphic.h>
+#include <Utils.h>
 #include "App.h"
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)

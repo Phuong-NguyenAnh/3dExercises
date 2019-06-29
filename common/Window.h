@@ -20,7 +20,7 @@ public:
 		wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wClass.hInstance = hInst;
 		wClass.lpfnWndProc = (WNDPROC)internalWindProc;
-		wClass.lpszClassName = WIN_CLASS;
+		wClass.lpszClassName = (LPCTSTR)WIN_CLASS;
 
 		auto okay = RegisterClass(&wClass);
 		assert(okay);
@@ -39,8 +39,8 @@ public:
 		const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		m_hwnd = CreateWindow(
-			WIN_CLASS,
-			CA2W(title),
+			(LPCTSTR)WIN_CLASS,
+			(LPCTSTR)title,
 			dwStyle,
 			(screenWidth - windowWidth) / 2,
 			(screenHeight - windowHeight) / 2,

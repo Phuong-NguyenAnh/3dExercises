@@ -95,6 +95,19 @@ public:
 		return result;
 	}
 
+	static GLfloat* rotationZMatrix(float angle) {
+		float c = cos(angle);
+		float s = sin(angle);
+		GLfloat result[16] =
+		{
+			c,-s, 0, 0,
+			s, c, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+		};
+		return result;
+	}
+
 	static GLfloat* rotationMatrix(float x, float y, float z, float angle) {
 		float c = cos(angle);
 		float s = sin(angle);

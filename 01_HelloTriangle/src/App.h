@@ -6,8 +6,11 @@
 #include <string>
 #include <cassert>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+constexpr auto M_PI = 3.14159265358979323846;
 
 class App : public WindowListener
 {
@@ -20,14 +23,14 @@ public:
 	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height)
 	{
 		const std::string vsSource = "\
-			uniform mat4 u_transform;\
+			uniform mat4 uTransform;\
 			attribute vec2 a_position;\
 			attribute vec4 a_color;\
 			varying vec4 v_color;\
 			void main()\
 			{\
 				v_color = a_color;\
-				gl_Position = u_transform * vec4(a_position, 0.0, 1.0);\
+				gl_Position = uTransform * vec4(a_position, 0.0, 1.0);\
 			}";
 		auto vs = Utils::compileShader(vsSource, GL_VERTEX_SHADER);
 		assert(vs > 0);
@@ -45,7 +48,6 @@ public:
 		auto program = Utils::linkProgram(vs, fs);
 		assert(program >= 0);
 		glUseProgram(program);
-
 		static float positions[] = {
 			0.f, .5f,
 			-.5f, -.5f,
@@ -66,7 +68,7 @@ public:
 		glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, 0, colors);
 		glEnableVertexAttribArray(colorLocation);
 
-		mTransformLocation = glGetUniformLocation(program, "u_transform");
+		mTransformLocation = glGetUniformLocation(program, "uTransform");
 		assert(mTransformLocation >= 0);
 		mAngle = 0;
 
@@ -90,8 +92,11 @@ private:
 	bool update() {
 		mAngle += 1;
 		if (mAngle >= 360) mAngle -= 360;
-		auto rotationMatrix = Utils::rotationMatrix(0.f, 0.f, 1.f, mAngle * M_PI / 180);
-		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix);
+
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), (float)(mAngle * M_PI / 180), glm::vec3(0.f, 0.f, 1.f));
+		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, glm::value_ptr(rotationMatrix));
+
+
 		return true;
 	}
 

@@ -6,25 +6,28 @@
 #include <string>
 #include <cassert>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 class App : public WindowListener
 {
 private:
-	Graphic& m_graphic;
-	int m_width, m_height;
-	GLuint m_matrixLocation;
-	float m_angle;
+	Graphic& mGraphic;
+	int mWidth, mHeight;
+	GLuint mTransformLocation;
+	float mAngle;
 public:
-	App(Graphic& graphic, int width, int height) : m_graphic(graphic), m_width(width), m_height(height)
+	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height)
 	{
 		const std::string vsSource = "\
-			uniform mat4 u_matrix\
+			uniform mat4 u_transform;\
 			attribute vec2 a_position;\
 			attribute vec4 a_color;\
 			varying vec4 v_color;\
 			void main()\
 			{\
 				v_color = a_color;\
-				gl_Position = u_matrix * vec4(a_position, 0.0, 1.0);\
+				gl_Position = u_transform * vec4(a_position, 0.0, 1.0);\
 			}";
 		auto vs = Utils::compileShader(vsSource, GL_VERTEX_SHADER);
 		assert(vs > 0);
@@ -63,13 +66,13 @@ public:
 		glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, 0, colors);
 		glEnableVertexAttribArray(colorLocation);
 
-		m_matrixLocation = glGetUniformLocation(program, "u_matrix");
-		assert(m_matrixLocation >= 0);
-		m_angle = 0;
+		mTransformLocation = glGetUniformLocation(program, "u_transform");
+		assert(mTransformLocation >= 0);
+		mAngle = 0;
 
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 	}
-
+	
 	bool tick()
 	{
 		render();
@@ -78,22 +81,24 @@ public:
 
 	void onResized(int newWidth, int newHeight)
 	{
-		m_width = newWidth;
-		m_height = newHeight;
+		mWidth = newWidth;
+		mHeight = newHeight;
+		glViewport(0, 0, mWidth, mHeight);
 	}
 
 private:
-	bool update()
-	{
+	bool update() {
+		mAngle += 1;
+		if (mAngle >= 360) mAngle -= 360;
+		auto rotationMatrix = Utils::rotationMatrix(0.f, 0.f, 1.f, mAngle * M_PI / 180);
+		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix);
 		return true;
 	}
 
 	void render()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		glViewport(0, 0, m_width, m_height);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		m_graphic.swapBuffers();
+		mGraphic.swapBuffers();
 	}
 };

@@ -7,6 +7,8 @@
 #include <Windows.h>
 #include <GLES2/gl2.h>
 
+#include <math.h>
+
 class Utils
 {
 public:
@@ -83,4 +85,26 @@ public:
 		return buffer.str();
 	}
 
+	static GLfloat* translationMatrix(float x, float y, float z) {
+		GLfloat result[16] = {
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1
+		};
+		return result;
+	}
+
+	static GLfloat* rotationMatrix(float x, float y, float z, float angle) {
+		float c = cos(angle);
+		float s = sin(angle);
+		GLfloat result[16] =
+		{
+			x * x * (1 - c) + c, x * y * (1 - c) - z * s, x * z * (1 - c) + y * s, 0,
+			x * y * (1 - c) + z * s, y * y * (1 - c) + c, y * z * (1 - c) - x * s, 0,
+			x * z * (1 - c) - y * s, y * z * (1 - c) + x * s, z * z * (1 - c) + c, 0,
+			0, 0, 0, 1
+		};
+		return result;
+	}
 };

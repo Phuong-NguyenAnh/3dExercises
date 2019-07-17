@@ -111,13 +111,20 @@ public:
 	static GLfloat* rotationMatrix(float x, float y, float z, float angle) {
 		float c = cos(angle);
 		float s = sin(angle);
-		GLfloat result[16] =
+		GLfloat matrix[16] =
 		{
 			x * x * (1 - c) + c, x * y * (1 - c) - z * s, x * z * (1 - c) + y * s, 0,
 			x * y * (1 - c) + z * s, y * y * (1 - c) + c, y * z * (1 - c) - x * s, 0,
 			x * z * (1 - c) - y * s, y * z * (1 - c) + x * s, z * z * (1 - c) + c, 0,
 			0, 0, 0, 1
 		};
+
+		GLfloat* result = new GLfloat[16];
+
+		for (int i = 0; i < 16; i++) {
+			result[i] = matrix[i];
+		}
+
 		return result;
 	}
 };

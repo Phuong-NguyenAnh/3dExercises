@@ -93,9 +93,11 @@ private:
 		mAngle += 1;
 		if (mAngle >= 360) mAngle -= 360;
 
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), (float)(mAngle * M_PI / 180), glm::vec3(0.f, 0.f, 1.f));
-		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, glm::value_ptr(rotationMatrix));
+		//glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), (float)(mAngle * M_PI / 180), glm::vec3(0.f, 0.f, 1.f));
+		auto rotationMatrix = Utils::rotationMatrix(0, 0, 1, mAngle * M_PI / 180);
+		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix);
 
+		delete[] rotationMatrix;
 
 		return true;
 	}

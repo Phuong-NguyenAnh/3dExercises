@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\01_HelloTriangle\src\App.h" />
+    <ClInclude Include="..\common\glmath.h" />
     <ClInclude Include="..\common\Graphic.h" />
     <ClInclude Include="..\common\Utils.h" />
     <ClInclude Include="..\common\Window.h" />

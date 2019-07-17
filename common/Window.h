@@ -2,9 +2,6 @@
 
 #include <Windows.h>
 #include "WindowListener.h"
-#include <cassert>
-#include <atlbase.h>
-#include <atlconv.h>
 
 class Window
 {
@@ -15,23 +12,22 @@ private:
 public:
 	Window(HINSTANCE hInst, int width, int height, bool resizable, const char* title) : m_listener(NULL)
 	{
-		auto WIN_CLASS = L"WinClass";
+		auto WIN_CLASS = "WinClass";
 		WNDCLASS wClass = { 0 };
 		wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wClass.hInstance = hInst;
 		wClass.lpfnWndProc = (WNDPROC)internalWindProc;
-		wClass.lpszClassName = (LPCTSTR)WIN_CLASS;
-
-		auto okay = RegisterClass(&wClass);
-		assert(okay);
-
+		wClass.lpszClassName = WIN_CLASS;
+		RegisterClass(&wClass);
+		
 		int dwStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
-		if (resizable) dwStyle |= WS_SIZEBOX | WS_MAXIMIZEBOX;
+		if (resizable)
+		{
+			dwStyle |= WS_SIZEBOX | WS_MAXIMIZEBOX;
+		}
 
 		RECT rect; rect.left = 0; rect.top = 0; rect.right = width; rect.bottom = height;
-		auto adjustWindowRectOkay = AdjustWindowRect(&rect, dwStyle, FALSE);
-		assert(adjustWindowRectOkay);
-
+		AdjustWindowRect(&rect, dwStyle, FALSE);
 		const int windowWidth = rect.right - rect.left;
 		const int windowHeight = rect.bottom - rect.top;
 
@@ -39,8 +35,8 @@ public:
 		const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		m_hwnd = CreateWindow(
-			(LPCTSTR)WIN_CLASS,
-			(LPCTSTR)title,
+			WIN_CLASS,
+			title,
 			dwStyle,
 			(screenWidth - windowWidth) / 2,
 			(screenHeight - windowHeight) / 2,
@@ -51,7 +47,6 @@ public:
 			hInst,
 			NULL
 		);
-		assert(m_hwnd);
 		SetWindowLongPtr(m_hwnd, GWLP_USERDATA, (LONG_PTR)this);
 	}
 
@@ -65,14 +60,14 @@ public:
 		return m_hwnd;
 	}
 
-	void show(int fps, WindowListener * listener, int nCmdShow)
+	void show(int fps, WindowListener* listener, int nCmdShow)
 	{
 		m_listener = listener;
 
 		MSG msg;
 		ZeroMemory(&msg, sizeof(MSG));
 
-		auto last = GetTickCount64();
+		auto last = GetTickCount();
 		const unsigned long frameTime = 1000 / fps;
 
 		ShowWindow(m_hwnd, nCmdShow);
@@ -87,17 +82,17 @@ public:
 			}
 			else
 			{
-				auto current = GetTickCount64();
+				auto current = GetTickCount();
 				auto duration = current - last;
 				if (duration < frameTime)
-					Sleep(frameTime - (DWORD)duration);
-				last = GetTickCount64();
+					Sleep(frameTime - duration);
+				last = GetTickCount();
 				if (!m_listener->tick())
 					break;
 			}
 		}
 	}
-
+	
 private:
 	static LRESULT CALLBACK internalWindProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{

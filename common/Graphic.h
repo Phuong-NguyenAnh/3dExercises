@@ -30,9 +30,6 @@ public:
 			EGL_RED_SIZE, 8,
 			EGL_GREEN_SIZE, 8,
 			EGL_BLUE_SIZE, 8,
-			EGL_ALPHA_SIZE, 8,
-			EGL_DEPTH_SIZE, 16,
-			EGL_STENCIL_SIZE, 8,
 			EGL_NONE
 		};
 		EGLConfig config;
@@ -43,21 +40,14 @@ public:
 		m_surface = eglCreateWindowSurface(m_display, config, (EGLNativeWindowType)nativeSurface, NULL);
 		assert(m_surface != EGL_NO_SURFACE);
 
-		EGLint contextAttributes[] =
-		{
-			EGL_CONTEXT_MAJOR_VERSION, 2,
-			EGL_CONTEXT_MINOR_VERSION, 0,
-			EGL_NONE
-		};
+		EGLint contextAttributes[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
 		m_context = eglCreateContext(m_display, config, EGL_NO_CONTEXT, contextAttributes);
 		assert(m_context != EGL_NO_CONTEXT);
 
 		makeCurrent();
 
-		printGLString("GL_VERSION", GL_VERSION);
 		printGLString("GL_VENDOR", GL_VENDOR);
 		printGLString("GL_RENDERER", GL_RENDERER);
-		printGLString("GL_SHADING_LANGUAGE_VERSION", GL_SHADING_LANGUAGE_VERSION);
 		printGLString("GL_EXTENSIONS", GL_EXTENSIONS);
 	}
 

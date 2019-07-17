@@ -6,11 +6,13 @@
 #include <string>
 #include <cassert>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
 
-constexpr auto M_PI = 3.14159265358979323846;
+#include "glmath.h"
+
+//constexpr auto M_PI = 3.14159265358979323846;
 
 class App : public WindowListener
 {
@@ -94,10 +96,9 @@ private:
 		if (mAngle >= 360) mAngle -= 360;
 
 		//glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), (float)(mAngle * M_PI / 180), glm::vec3(0.f, 0.f, 1.f));
-		auto rotationMatrix = Utils::rotationMatrix(0, 0, 1, mAngle * M_PI / 180);
-		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix);
-
-		delete[] rotationMatrix;
+		//auto rotationMatrix = Utils::rotationMatrix(0, 0, 1, mAngle * PI / 180);
+		auto rotationMatrix = Matrix::rotation(mAngle, 0, 0, 1);
+		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix.data());
 
 		return true;
 	}

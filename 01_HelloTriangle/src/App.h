@@ -6,13 +6,7 @@
 #include <string>
 #include <cassert>
 
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/type_ptr.hpp>
-
-#include "glmath.h"
-
-//constexpr auto M_PI = 3.14159265358979323846;
+#include <glmath.h>
 
 class App : public WindowListener
 {
@@ -20,61 +14,82 @@ private:
 	Graphic& mGraphic;
 	int mWidth, mHeight;
 	GLuint mTransformLocation;
+	Matrix mTransformMatrix;
+	float mDistance;
+	bool mExit;
 	float mAngle;
 public:
-	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height)
+	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height), mTransformMatrix(Matrix::identity())
 	{
 		const std::string vsSource = "\
 			uniform mat4 uTransform;\
-			attribute vec2 a_position;\
-			attribute vec4 a_color;\
-			varying vec4 v_color;\
+			attribute vec3 a_position;\
+			attribute vec3 a_color;\
+			varying vec3 v_color;\
 			void main()\
 			{\
 				v_color = a_color;\
-				gl_Position = uTransform * vec4(a_position, 0.0, 1.0);\
+				gl_Position = uTransform * vec4(a_position, 1.0);\
 			}";
 		auto vs = Utils::compileShader(vsSource, GL_VERTEX_SHADER);
 		assert(vs > 0);
 
 		const std::string fsSource = "\
 			precision mediump float;\
-			varying vec4 v_color;\
+			varying vec3 v_color;\
 			void main()\
 			{\
-				gl_FragColor = v_color;\
+				gl_FragColor = vec4(v_color, 1.0);\
 			}";
 		auto fs = Utils::compileShader(fsSource, GL_FRAGMENT_SHADER);
 		assert(fs > 0);
 
 		auto program = Utils::linkProgram(vs, fs);
-		assert(program >= 0);
+		assert(program > 0);
 		glUseProgram(program);
+
 		static float positions[] = {
-			0.f, .5f,
-			-.5f, -.5f,
-			.5f, -.5f
+			-1.f,  1.f, 1.f,
+			-1.f, -1.f, 1.f,
+			 1.f, -1.f, 1.f,
+			 1.f,  1.f, 1.f,
+
+			-1.f,  1.f, -1.f,
+			-1.f, -1.f, -1.f,
+			 1.f, -1.f, -1.f,
+			 1.f,  1.f, -1.f,
 		};
-		auto positionLocation = glGetAttribLocation(program, "a_position");
+
+		GLint positionLocation = glGetAttribLocation(program, "a_position");
 		assert(positionLocation >= 0);
-		glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, positions);
+		glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, positions);
 		glEnableVertexAttribArray(positionLocation);
 
-		static float colors[] = {
-			1.f, 0.f, 0.f, 1.f,
-			0.f, 1.f, 0.f, 1.f,
-			0.f, 0.f, 1.f, 1.f,
+		static GLubyte colors[] = {
+			 0,	0, 0,
+			 0, 0, 255,
+			 0, 255, 0,
+			 0, 255, 255,
+
+			 255,0,0,
+			 255,0,255,
+			 255,255,0,
+			 255,255,255
 		};
+
 		auto colorLocation = glGetAttribLocation(program, "a_color");
 		assert(colorLocation >= 0);
-		glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, 0, colors);
+		glVertexAttribPointer(colorLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, colors);
 		glEnableVertexAttribArray(colorLocation);
 
 		mTransformLocation = glGetUniformLocation(program, "uTransform");
 		assert(mTransformLocation >= 0);
 		mAngle = 0;
+		mDistance = 0;
+		mExit = false;
 
 		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glEnable(GL_DEPTH_TEST);
 	}
 	
 	bool tick()
@@ -90,23 +105,68 @@ public:
 		glViewport(0, 0, mWidth, mHeight);
 	}
 
+	void onKeyDown(int keyCode) {
+		const float rotationStep = 2.f;
+		const float distanceStep = 0.1f;
+
+		switch (keyCode)
+		{
+		case VK_DOWN:
+			mTransformMatrix = Matrix::rotation(rotationStep, 1.f, 0.f, 0.f) * mTransformMatrix;
+			break;
+		case VK_UP:
+			mTransformMatrix = Matrix::rotation(-rotationStep, 1.f, 0.f, 0.f) * mTransformMatrix;
+			break;
+		case VK_LEFT:
+			mTransformMatrix = Matrix::rotation(-rotationStep, 0.f, 1.f, 0.f) * mTransformMatrix;
+			break;
+		case VK_RIGHT:
+			mTransformMatrix = Matrix::rotation(rotationStep, 0.f, 1.f, 0.f) * mTransformMatrix;
+			break;
+		case VK_SPACE:
+			mTransformMatrix = Matrix::identity();
+			mDistance = 0.f;
+			break;
+		case VK_RETURN:
+			mDistance += distanceStep;
+			break;
+		case VK_BACK:
+			mDistance -= distanceStep;
+			break;
+		default:
+			mExit = true;
+			break;
+		}
+	}
 private:
 	bool update() {
-		mAngle += 1;
-		if (mAngle >= 360) mAngle -= 360;
-
-		//glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), (float)(mAngle * M_PI / 180), glm::vec3(0.f, 0.f, 1.f));
-		//auto rotationMatrix = Utils::rotationMatrix(0, 0, 1, mAngle * PI / 180);
-		auto rotationMatrix = Matrix::rotation(mAngle, 0, 0, 1);
-		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, rotationMatrix.data());
-
-		return true;
+		return !mExit;
 	}
 
 	void render()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		const auto h = 1.f;
+		const auto w = h * mWidth / mHeight;
+
+		const auto matrix = Matrix::frustum(-w / 2, w / 2, -h / 2, h / 2, 1.f, 50.f)
+			* Matrix::translate(0.f, 0.f, -4.f + mDistance)
+			* mTransformMatrix;
+
+		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, matrix.data());
+
+		static const GLubyte indices[] = {
+			0,1,2,0,2,3,
+			4,6,5,4,7,6,
+			0,5,1,0,4,5,
+			3,2,6,3,6,7,
+			0,3,4,4,3,7,
+			1,6,2,1,5,6
+		};
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
 		mGraphic.swapBuffers();
 	}
 };

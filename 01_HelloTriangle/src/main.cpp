@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 
 	const int WIDTH = 800, HEIGHT = 480;
 	const bool RESIZABLE = true;
-	Window window(hInst, WIDTH, HEIGHT, RESIZABLE, "Rotating Triangle");
+	Window window(hInst, WIDTH, HEIGHT, RESIZABLE, "Colorful Cube");
 
 	Graphic graphic(window.surface());
 	App app(graphic, WIDTH, HEIGHT);

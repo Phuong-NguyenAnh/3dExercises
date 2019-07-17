@@ -9,11 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="..\gles\libEGL.dll" />
     <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
@@ -30,8 +25,13 @@
     <ClInclude Include="..\common\WindowListener.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="src\App.h">
+    <ClInclude Include="..\src\App.h">
       <Filter>src</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

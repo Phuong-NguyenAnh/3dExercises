@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="..\gles\libEGL.dll">
       <FileType>Document</FileType>
     </CopyFileToFolders>
@@ -34,7 +31,10 @@
     <ClInclude Include="..\common\Utils.h" />
     <ClInclude Include="..\common\Window.h" />
     <ClInclude Include="..\common\WindowListener.h" />
-    <ClInclude Include="src\App.h" />
+    <ClInclude Include="..\src\App.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

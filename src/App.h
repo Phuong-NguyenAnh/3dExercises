@@ -18,6 +18,7 @@ private:
 	float mDistance;
 	bool mExit;
 	float mAngle;
+	int preMouseX, preMouseY;
 public:
 	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height), mTransformMatrix(Matrix::identity())
 	{
@@ -138,6 +139,23 @@ public:
 			break;
 		}
 	}
+
+	void onMouseMove(int mouseButtonCode, int x, int y) {
+		int tx = x - preMouseX;
+		int ty = y - preMouseY;
+		switch (mouseButtonCode)
+		{
+		case MK_LBUTTON:
+			mTransformMatrix = Matrix::rotation((float)tx, 0.f, 1.f, 0.f) * Matrix::rotation((float)ty, 1.f, 0.f, 0.f) * mTransformMatrix;
+			break;
+		case MK_RBUTTON:
+			mDistance += (float)ty / 100;
+			break;
+		}
+		preMouseX = x;
+		preMouseY = y;
+	}
+
 private:
 	bool update() {
 		return !mExit;

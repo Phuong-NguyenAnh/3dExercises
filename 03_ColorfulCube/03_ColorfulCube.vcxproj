@@ -130,15 +130,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\01_HelloTriangle\src\App.h" />
     <ClInclude Include="..\common\glmath.h" />
     <ClInclude Include="..\common\Graphic.h" />
     <ClInclude Include="..\common\Utils.h" />
     <ClInclude Include="..\common\Window.h" />
     <ClInclude Include="..\common\WindowListener.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\01_HelloTriangle\src\main.cpp" />
+    <ClInclude Include="..\src\App.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\gles\libEGL.dll">
@@ -147,6 +144,9 @@
     <CopyFileToFolders Include="..\gles\libGLESv2.dll">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

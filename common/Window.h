@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include "WindowListener.h"
 
+#include <windowsx.h>
+
 class Window
 {
 private:
@@ -117,6 +119,26 @@ private:
 		case WM_KEYDOWN:
 		{
 			if (m_listener) m_listener->onKeyDown(wParam);
+			return 0;
+		}
+		case WM_MBUTTONDOWN:
+		{
+			if (m_listener) m_listener->onMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		}
+		case WM_MBUTTONUP:
+		{
+			if (m_listener) m_listener->onMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		}
+		case WM_MOUSEMOVE:
+		{
+			if (m_listener) m_listener->onMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		}
+		case WM_VSCROLL:
+		{
+			if (m_listener) m_listener->onMouseScroll(wParam, lParam);
 			return 0;
 		}
 		}

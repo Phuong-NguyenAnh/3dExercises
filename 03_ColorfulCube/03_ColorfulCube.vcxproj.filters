@@ -41,12 +41,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\gles\libEGL.dll" />
-    <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\gles\libEGL.dll" />
+    <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
 </Project>

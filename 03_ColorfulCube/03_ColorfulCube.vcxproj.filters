@@ -36,7 +36,7 @@
     <ClInclude Include="..\common\WindowListener.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\App.h">
+    <ClInclude Include="src\App.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -45,7 +45,7 @@
     <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

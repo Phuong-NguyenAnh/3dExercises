@@ -135,7 +135,7 @@
     <ClInclude Include="..\common\Utils.h" />
     <ClInclude Include="..\common\Window.h" />
     <ClInclude Include="..\common\WindowListener.h" />
-    <ClInclude Include="..\src\App.h" />
+    <ClInclude Include="src\App.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\gles\libEGL.dll">
@@ -150,7 +150,7 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

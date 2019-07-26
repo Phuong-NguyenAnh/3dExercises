@@ -7,6 +7,9 @@
     <Filter Include="common">
       <UniqueIdentifier>{946565e9-1270-484b-82e0-ab06be5f67bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{374c687a-0e2b-49b6-9c20-6afea622b087}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h">
@@ -39,5 +42,11 @@
   <ItemGroup>
     <None Include="..\gles\libEGL.dll" />
     <None Include="..\gles\libGLESv2.dll" />
+    <None Include="data\vs.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\fs.glsl">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
 </Project>

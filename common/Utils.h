@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <string>
+#include <fstream>
+#include <sstream>
 #include <Windows.h>
 #include <GLES2/gl2.h>
 
@@ -39,7 +41,7 @@ public:
 			auto infoLog = new char[infoLen];
 			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
 			printf("Error compiling %s shader:\n%s\n", type == GL_VERTEX_SHADER ? "vertex" : "fragment", infoLog);
-			delete [] infoLog;
+			delete[] infoLog;
 		}
 		glDeleteShader(shader);
 		return 0;
@@ -65,12 +67,19 @@ public:
 			auto infoLog = new char[infoLen];
 			glGetProgramInfoLog(program, infoLen, NULL, infoLog);
 			printf("Error linking program:\n%s\n", infoLog);
-			delete [] infoLog;
+			delete[] infoLog;
 		}
 		glDeleteProgram(program);
 		return 0;
 	}
 
+	static std::string readFile(const char* filePath)
+	{
+		std::ifstream t(filePath);
+		std::stringstream buffer;
+		buffer << t.rdbuf();
+		return buffer.str();
+	}
 
 	static GLfloat* rotationMatrix(float x, float y, float z, float angle) {
 		float c = cos(angle);

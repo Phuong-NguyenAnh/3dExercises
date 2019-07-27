@@ -10,6 +10,7 @@
 
 #include "Defines.h"
 
+#include <Tga.h>
 
 class App : public WindowListener
 {
@@ -22,23 +23,35 @@ private:
 	bool mExit;
 	float mAngle;
 	int preMouseX, preMouseY;
+	Tga * tgaObject;
 public:
 	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height), mTransformMatrix(Matrix::identity())
 	{
-		CREATE_SHADER(vs, "data/vs.glsl", GL_VERTEX_SHADER)
-
-		CREATE_SHADER(fs, "data/fs.glsl", GL_FRAGMENT_SHADER)
+		CREATE_SHADER(vs, "data/vs.glsl", GL_VERTEX_SHADER);
+		CREATE_SHADER(fs, "data/fs.glsl", GL_FRAGMENT_SHADER);
 
 		auto program = Utils::linkProgram(vs, fs);
 		assert(program > 0);
 		glUseProgram(program);
-		
-		CREATE_ATRIBUTE_LOCATION(positionLocation, program, "aPosition")
-		ATTRIBUTE_POINTER(positionLocation, 3, GL_FLOAT, positions)
 
-		CREATE_ATRIBUTE_LOCATION(colorLocation, program, "aColor")
-		ATTRIBUTE_POINTER(colorLocation, 3, GL_UNSIGNED_BYTE, colors)
+		CREATE_ATRIBUTE_LOCATION(positionLocation, program, "aPosition");
+		ATTRIBUTE_POINTER(positionLocation, 3, GL_FLOAT, positions);
 
+		// texture
+		tgaObject = new Tga("data/ngoctrinh.tga");
+		auto textureWidth = tgaObject->width();
+		auto textureHeight = tgaObject->height();
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		auto internalFormat = tgaObject->hasAlpha() ? GL_RGBA : GL_RGB;
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureWidth, textureHeight, 0, internalFormat, GL_UNSIGNED_BYTE, tgaObject->data());
+		glActiveTexture(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		CREATE_ATRIBUTE_LOCATION(texCoordLocation, program, "aTexCoord");
+		ATTRIBUTE_POINTER(texCoordLocation, 2, GL_FLOAT, texCoords);
 
 		mTransformLocation = glGetUniformLocation(program, "uTransform");
 		assert(mTransformLocation >= 0);
@@ -49,7 +62,7 @@ public:
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glEnable(GL_DEPTH_TEST);
 	}
-	
+
 	bool tick()
 	{
 		render();
@@ -131,16 +144,7 @@ private:
 
 		glUniformMatrix4fv(mTransformLocation, 1, GL_FALSE, matrix.data());
 
-		static const GLubyte indices[] = {
-			0,1,2,0,2,3,
-			4,6,5,4,7,6,
-			0,5,1,0,4,5,
-			3,2,6,3,6,7,
-			0,3,4,4,3,7,
-			1,6,2,1,5,6
-		};
-
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+		glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_BYTE, indices);
 
 		mGraphic.swapBuffers();
 	}

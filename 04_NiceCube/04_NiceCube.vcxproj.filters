@@ -47,5 +47,8 @@
     <CopyFileToFolders Include="..\gles\libGLESv2.dll" />
     <CopyFileToFolders Include="data\fs.glsl" />
     <CopyFileToFolders Include="data\vs.glsl" />
+    <CopyFileToFolders Include="data\ngoctrinh.tga">
+      <Filter>data</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

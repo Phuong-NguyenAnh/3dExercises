@@ -26,6 +26,7 @@
     <ClInclude Include="..\common\Window.h" />
     <ClInclude Include="..\common\WindowListener.h" />
     <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\Defines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -41,9 +42,13 @@
   <ItemGroup>
     <CopyFileToFolders Include="data\fs.glsl">
       <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\data\</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\data\</DestinationFolders>
     </CopyFileToFolders>
     <CopyFileToFolders Include="data\vs.glsl">
       <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\data\</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\data\</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <PropertyGroup Label="Globals">

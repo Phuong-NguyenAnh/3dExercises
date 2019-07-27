@@ -8,6 +8,9 @@
 
 #include <glmath.h>
 
+#include "Defines.h"
+
+
 class App : public WindowListener
 {
 private:
@@ -22,66 +25,20 @@ private:
 public:
 	App(Graphic& graphic, int width, int height) : mGraphic(graphic), mWidth(width), mHeight(height), mTransformMatrix(Matrix::identity())
 	{
-		const std::string vsSource = "\
-			uniform mat4 uTransform;\
-			attribute vec3 a_position;\
-			attribute vec3 a_color;\
-			varying vec3 v_color;\
-			void main()\
-			{\
-				v_color = a_color;\
-				gl_Position = uTransform * vec4(a_position, 1.0);\
-			}";
-		auto vs = Utils::compileShader(vsSource, GL_VERTEX_SHADER);
-		assert(vs > 0);
+		CREATE_SHADER(vs, "data/vs.glsl", GL_VERTEX_SHADER)
 
-		const std::string fsSource = "\
-			precision mediump float;\
-			varying vec3 v_color;\
-			void main()\
-			{\
-				gl_FragColor = vec4(v_color, 1.0);\
-			}";
-		auto fs = Utils::compileShader(fsSource, GL_FRAGMENT_SHADER);
-		assert(fs > 0);
+		CREATE_SHADER(fs, "data/fs.glsl", GL_FRAGMENT_SHADER)
 
 		auto program = Utils::linkProgram(vs, fs);
 		assert(program > 0);
 		glUseProgram(program);
+		
+		CREATE_ATRIBUTE_LOCATION(positionLocation, program, "aPosition")
+		ATTRIBUTE_POINTER(positionLocation, 3, GL_FLOAT, positions)
 
-		static float positions[] = {
-			-1.f,  1.f, 1.f,
-			-1.f, -1.f, 1.f,
-			 1.f, -1.f, 1.f,
-			 1.f,  1.f, 1.f,
+		CREATE_ATRIBUTE_LOCATION(colorLocation, program, "aColor")
+		ATTRIBUTE_POINTER(colorLocation, 3, GL_UNSIGNED_BYTE, colors)
 
-			-1.f,  1.f, -1.f,
-			-1.f, -1.f, -1.f,
-			 1.f, -1.f, -1.f,
-			 1.f,  1.f, -1.f,
-		};
-
-		GLint positionLocation = glGetAttribLocation(program, "a_position");
-		assert(positionLocation >= 0);
-		glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, positions);
-		glEnableVertexAttribArray(positionLocation);
-
-		static GLubyte colors[] = {
-			 0,	0, 0,
-			 0, 0, 255,
-			 0, 255, 0,
-			 0, 255, 255,
-
-			 255,0,0,
-			 255,0,255,
-			 255,255,0,
-			 255,255,255
-		};
-
-		auto colorLocation = glGetAttribLocation(program, "a_color");
-		assert(colorLocation >= 0);
-		glVertexAttribPointer(colorLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, colors);
-		glEnableVertexAttribArray(colorLocation);
 
 		mTransformLocation = glGetUniformLocation(program, "uTransform");
 		assert(mTransformLocation >= 0);

@@ -11,17 +11,11 @@ static const float positions[] = {
 	 1.f, -1.f, -1.f,
 	 1.f,  1.f, -1.f,
 
-	 // top
-	-1.f, -1.f, 1.f,
-	 1.f, -1.f, 1.f,
-	-1.f, -1.f, -1.f,
-	 1.f, -1.f, -1.f,
-
-	 // bot
-	-1.f,  1.f, 1.f,
-	 1.f,  1.f, 1.f,
 	-1.f,  1.f, -1.f,
 	 1.f,  1.f, -1.f,
+
+	-1.f, -1.f, -1.f,
+	 1.f, -1.f, -1.f,
 };
 
 static const float texCoords[] = {
@@ -36,24 +30,21 @@ static const float texCoords[] = {
 	0.0, 1.0,
 
 	0.0, 0.0,
-	0.0, 1.0,
-	1.0, 0.0,
-	1.0, 1.0,
+	1.0, 0.0,	
 
-	0.0, 0.0,
 	0.0, 1.0,
-	1.0, 0.0,
 	1.0, 1.0,
 };
 
 static const byte indicesSize = 36;
 static const GLubyte indices[indicesSize] = {
-	0,1,2,0,2,3,
-	4,6,5,4,7,6,
-	0,5,1,0,4,5,
-	3,2,6,3,6,7,
-	8,9,10 ,9,10,11,
-	12,13,14, 13,14,15
+	0,1,2, 0,2,3,
+	4,6,5, 4,7,6,
+	0,5,1, 0,4,5,
+	3,2,6, 3,6,7,
+
+	0,3,8, 3,8,9,
+	1,2,10, 2,10,11
 };
 
 static const GLubyte colors[] = {
